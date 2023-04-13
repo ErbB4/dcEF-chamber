@@ -29,7 +29,7 @@ import masks_visualiser as mv
 read data from czi file and store it in a numpy array
 """
 
-filename = '2nd.czi'
+filename = 'example_file.czi'
 raw_image = czifile.imread(filename)
 
 """
