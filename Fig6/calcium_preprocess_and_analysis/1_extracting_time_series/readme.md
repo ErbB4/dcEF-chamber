@@ -9,8 +9,8 @@ With this repo we also include an example file which user can play around to see
 how the algorithm works. The user needs to execute timeseries_extraction_example.py
 The link to the example file is:
 https://data-proxy.ebrains.eu/api/permalinks/ebf8dacd-91ad-446b-a073-61750c513b71
-
-
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 The results after processing are saved in a pickled dictionary file bearing the name
 dcEF-calcium-CA1_diff_mask_std3. One needs to use pickle library to load the data.
 The data is stored in a dictionary which contains results from all experiment types,
