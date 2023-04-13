@@ -166,3 +166,32 @@ test_function()
 get_FR_with_different_methods("wo-metal-disc")
 
 # afterwards you can decide which method to apply in the final dataset
+# Then use this function to gee the final dataset
+def get_FR_with_different_methods(experiment):
+    data = []
+    for prep_date in results[experiment].keys():
+        for culture in results[experiment][prep_date].keys():
+            for recording in results[experiment][prep_date][culture].keys():
+                for neuron in results[experiment][prep_date][culture][recording]["time_series_processed"].keys():
+                    neuron_data = results[experiment][prep_date][culture][recording]["time_series_processed"][neuron]
+                    raw_intensity = neuron_data["RawIntDen"].values
+
+                    data.append(
+                        {
+                         "experiment": experiment,
+                         "prep_date": prep_date,
+                         "culture": culture,
+                         "recording": recording,
+                         "neuron": neuron,
+                         "firing_rate": analyze_trace(raw_intensity,"rescale_detrend_smooth",3.) # we used rescale_detrend_smooth
+                        }
+                        )
+
+    df = pd.DataFrame(data)
+    df["timing"] = df["recording"].str.slice(0,3)
+    df["group"] = df["culture"].str[-4::]
+    df["culture_ID"] = df["culture"].str.slice(0,-5)
+    df.pop("culture")
+    df.pop("recording")
+
+    df.to_csv("calcium_data_"+experiment+".csv")
