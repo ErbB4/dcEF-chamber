@@ -62,26 +62,26 @@ def get_trace_stats(intensity_series,threshold_ratio=3):
     ].dropna().time_order
     data["time"] = data.time_order/len(data)*120
     firing_rate = int(len(spike_boundary_index) / 2) / 120
-    return int(len(spike_boundary_index) / 2) #spike numbers
+    return int(len(spike_boundary_index) / 2), firing_rate #spike numbers and FR
 
 def analyze_trace(raw_intensity,type,threshold_ratio=3):
-	#get the spike numbers under different preprocessing method
+	#get the spike numbers or FR under different preprocessing method
     if type == "raw":
-        spike_n = get_trace_stats(raw_intensity,threshold_ratio=3)
+        spike_n = get_trace_stats(raw_intensity,threshold_ratio=3)[0]
     if type == "detrend":
         detrended_intensity = detrend_trace(raw_intensity)
-        spike_n = get_trace_stats(detrended_intensity,threshold_ratio=3)
+        spike_n = get_trace_stats(detrended_intensity,threshold_ratio=3)[0]
     if type == "detrend_smooth":
         detrended_intensity = detrend_trace(raw_intensity)
         smoothed_intensity = moving_smoothing(detrended_intensity)
-        spike_n = get_trace_stats(smoothed_intensity,threshold_ratio=3)
+        spike_n = get_trace_stats(smoothed_intensity,threshold_ratio=3)[0]
     if type == "rescale_detrend":
         rescaled_intensity = rescale_and_detrend_trace(raw_intensity)
-        spike_n = get_trace_stats(rescaled_intensity,threshold_ratio=3)
+        spike_n = get_trace_stats(rescaled_intensity,threshold_ratio=3)[0]
     if type == "rescale_detrend_smooth":
         rescaled_intensity = rescale_and_detrend_trace(raw_intensity)
         smoothed_intensity = moving_smoothing(rescaled_intensity)
-        spike_n = get_trace_stats(smoothed_intensity,threshold_ratio=3)
+        spike_n = get_trace_stats(smoothed_intensity,threshold_ratio=3)[0]
     return spike_n
 
 def plot_individual_trace(experiment):
@@ -103,13 +103,13 @@ def plot_individual_trace(experiment):
                         
                         plt.subplot(2,1,1)
                         #plot detrend data, old method
-                        spike_n = get_trace_stats(detrend,3.)
+                        spike_n = get_trace_stats(detrend,3.)[0]
                         plt.plot(np.linspace(0,120,len(detrend)),detrend,color='blue', label='detrended data')
                         plt.axhline(y=np.mean(detrend)+3.*np.std(detrend),linestyle='--',color='blue')
                         plt.text(0,40,str(spike_n)+" spikes",fontsize=16,color='blue')
 
                         #plot smoothed detrended data
-                        spike_n = get_trace_stats(smoothed,3.)
+                        spike_n = get_trace_stats(smoothed,3.)[0]
                         plt.plot(np.linspace(0,120,len(smoothed)),smoothed,color='grey', label='smoothed detrended data')
                         plt.axhline(y=np.mean(smoothed)+3.*np.std(smoothed),linestyle='--',color='grey')
                         plt.text(60,40,str(spike_n)+" spikes",fontsize=16,color='grey')
@@ -117,12 +117,12 @@ def plot_individual_trace(experiment):
 
                         #plot processed data (re-scaled, detrended, with/or/without being filtered)
                         plt.subplot(2,1,2)
-                        spike_n = get_trace_stats(processed_1,3.)
+                        spike_n = get_trace_stats(processed_1,3.)[0]
                         plt.plot(np.linspace(0,120,len(processed_1)),processed_1,color='k',label="double")
                         plt.axhline(y=np.mean(processed_1)+3.*np.std(processed_1),linestyle='--',color='k')
                         plt.text(0,0.5,str(spike_n)+" spikes",fontsize=16,color='k')
 
-                        spike_n = get_trace_stats(processed_2,3)
+                        spike_n = get_trace_stats(processed_2,3)[0]
                         plt.plot(np.linspace(0,120,len(processed_2)),processed_2,color='r',label="triple")
                         plt.axhline(y=np.mean(processed_2)+3.*np.std(processed_2),linestyle='--',color='r')
                         plt.text(60,0.5,str(spike_n)+" spikes",fontsize=16,color='r')
@@ -130,7 +130,7 @@ def plot_individual_trace(experiment):
 
 
                         plt.savefig("./traces/"+str(experiment)+"/"+str(prep_date)+"/"+str(culture)+"/"+str(recording)[0:-4]+"/"+str(neuron)+".png")
-                print(str(experiment)+" "+str(prep_date)+" "+str(culture)+" finished plotting!")
+                print(str(experiment)+" "+str(prep_date)+" "+str(culture)+" finished plotting!") #predefine your folders
 
 
 
@@ -144,13 +144,13 @@ def quick_test_function():
     plt.plot(np.linspace(1,120,len(raw_intensity)),raw_intensity,color='red')
 
     detrended = detrend_trace(raw_intensity)
-    FR = get_trace_stats(detrended)
+    FN = get_trace_stats(detrended)[0]
     plt.plot(np.linspace(1,120,len(detrended)),detrended,color='blue')
     plt.axhline(y=np.mean(detrended)+3*np.std(detrended),linewidth=0.5,linestyle='--',color='blue')
     plt.text(0,np.mean(detrended)+2*np.std(detrended),str(FR)+ " spikes",color='blue')
 
     smoothed = moving_smoothing(detrended)
-    FR = get_trace_stats(smoothed,3.)
+    FN = get_trace_stats(smoothed,3.)[0]
     plt.plot(np.linspace(1,120,len(smoothed)),smoothed,color='grey')
     plt.axhline(y=np.mean(smoothed)+3.*np.std(smoothed),linewidth=0.5,linestyle='--',color='grey')
     plt.text(80,np.mean(smoothed)+2*np.std(smoothed),str(FR)+ " spikes",color='grey')
