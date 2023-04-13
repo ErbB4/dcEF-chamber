@@ -6,7 +6,7 @@ The algorithm identifies neurons using morphological openings and closing and ha
 size above a given pixel area/threshold
 
 This example python file works for a single recording.
-To batch process multiple files use timeseries_extraction_example.py
+To batch process multiple files use timeseries_extraction_main.py
 """
 
 """
