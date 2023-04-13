@@ -213,7 +213,8 @@ for experiment in next(os.walk(mainpath))[1]:
                     results[experiment][prep_date][culture][filename]['mask'] = mask
 
                     """
-                    This section is used to generate mask images with neuron number 
+                    This section is used to generate data which can be used with masks_visualiser
+                    to generate neuron mask images with neuron number 
                     """
                     mask_color = np.zeros((tomato_cleaned.shape[0], tomato_cleaned.shape[1], 3), dtype='int32')
                     for r in range(tomato_cleaned.shape[0]):
