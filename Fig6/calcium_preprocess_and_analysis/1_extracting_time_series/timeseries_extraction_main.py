@@ -5,7 +5,7 @@ Python script to extract time series data from confocal microscopy based imaging
 The algorithm identifies neurons using morphological openings and closing and having
 size above a given pixel area/threshold
 
-This example python file works for batch processing multiple files.
+This python file works for batch processing multiple files.
 To work on single file use timeseries_extraction_example.py
 
 Input: Raw data for all experiments
